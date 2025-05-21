@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Trucking Review Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div class="container mx-auto p-4">
+    <h2 class="text-2xl font-bold mb-4">Login</h2>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" class="w-full p-2 mb-4 border rounded" required>
+      <input type="password" id="password" placeholder="Password" class="w-full p-2 mb-4 border rounded" required>
+      <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Login</button>
+    </form>
+    <p class="mt-2">Don't have an account? <a href="/register.html" class="text-blue-500">Register</a></p>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        if (response.ok) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('role', data.role);
+          if (data.role === 'driver') window.location.href = '/driver-dashboard.html';
+          else if (data.role === 'company') window.location.href = '/company-dashboard.html';
+          else if (data.role === 'admin') window.location.href = '/admin-dashboard.html';
+        } else alert(data.message || 'Login failed');
+      } catch (error) {
+        alert('Login failed');
+      }
+    });
+  </script>
+</body>
+</html>
