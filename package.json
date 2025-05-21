@@ -1,0 +1,16 @@
+{
+  "name": "trucking-review-platform",
+  "version": "1.0.0",
+  "description": "MVP for trucking review platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "sqlite3": "^5.0.2",
+    "jsonwebtoken": "^8.5.1",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0"
+  }
+}
