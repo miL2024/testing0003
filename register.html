@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Trucking Review Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div class="container mx-auto p-4">
+    <h2 class="text-2xl font-bold mb-4">Register</h2>
+    <form id="registerForm">
+      <input type="email" id="email" placeholder="Email" class="w-full p-2 mb-4 border rounded" required>
+      <input type="password" id="password" placeholder="Password" class="w-full p-2 mb-4 border rounded" required>
+      <select id="role" class="w-full p-2 mb-4 border rounded">
+        <option value="driver">Driver</option>
+        <option value="company">Company</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Register</button>
+    </form>
+    <p class="mt-2">Already have an account? <a href="/login.html" class="text-blue-500">Login</a></p>
+  </div>
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const role = document.getElementById('role').value;
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, role })
+        });
+        const data = await response.json();
+        if (response.ok) {
+          alert('Registration successful! Please log in.');
+          window.location.href = '/login.html';
+        } else alert(data.message || 'Registration failed');
+      } catch (error) {
+        alert('Registration failed');
+      }
+    });
+  </script>
+</body>
+</html>
