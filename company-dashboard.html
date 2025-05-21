@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Dashboard - Trucking Review Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div class="container mx-auto p-4">
+    <h2 class="text-2xl font-bold mb-4">Company Dashboard</h2>
+    <h3 class="text-xl mb-2">Post a Job</h3>
+    <form id="jobForm">
+      <input type="text" id="title" placeholder="Job Title" class="w-full p-2 mb-4 border rounded" required>
+      <textarea id="description" placeholder="Job Description" class="w-full p-2 mb-4 border rounded" required></textarea>
+      <input type="text" id="pay" placeholder="Pay" class="w-full p-2 mb-4 border rounded" required>
+      <input type="text" id="location" placeholder="Location" class="w-full p-2 mb-4 border rounded" required>
+      <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Post Job</button>
+    </form>
+    <h3 class="text-xl mt-6 mb-2">Reviews</h3>
+    <ul id="reviewList" class="list-disc pl-5"></ul>
+  </div>
+  <script>
+    document.getElementById('jobForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+      const pay = document.getElementById('pay').value;
+      const location = document.getElementById('location').value;
+      try {
+        const response = await fetch('/api/jobs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify({ title, description, pay, location })
+        });
+        if (response.ok) {
+          alert('Job posted successfully');
+          document.getElementById('jobForm').reset();
+        } else alert('Failed to post job');
+      } catch (error) {
+        alert('Failed to post job');
+      }
+    });
+
+    async function fetchReviews() {
+      try {
+        const response = await fetch('/api/reviews?companyId=' + localStorage.getItem('userId'));
+        const reviews = await response.json();
+        const list = document.getElementById('reviewList');
+        reviews.forEach(review => {
+          const li = document.createElement('li');
+          li.textContent = `Rating: ${review.rating}, Comment: ${review.comment}`;
+          list.appendChild(li);
+        });
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      }
+    }
+    fetchReviews();
+  </script>
+</body>
+</html>
